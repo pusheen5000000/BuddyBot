@@ -37,6 +37,7 @@ const IMAGE_SETS = {
 };
 
 const DEFAULT_EGG_TYPE = 'egg1';
+const XP_PER_STAGE = 30;
 
 function getEvolutionSet(petObj) {
   return EGG_TYPES[petObj.eggType] || EGG_TYPES[DEFAULT_EGG_TYPE];
@@ -45,7 +46,7 @@ function getEvolutionSet(petObj) {
 const SOUND_PLACEHOLDERS = {
   feed: '🔊 *nom nom nom*',
   play: '🔊 *boing boing*',
-  talk: '🔊 *chirp chirp*',
+  hug: '🔊 *squeeze squeeze*',
   sleep: '🔊 *yaaawn*',
   wake: '🔊 *stretch stretch*',
   evolve: '🔊 *TA-DA sparkle jingle*'
@@ -70,11 +71,14 @@ let selectedEggType = null;
 
 const petNameDisplay = document.getElementById('pet-name-display');
 const stageBadge = document.getElementById('stage-badge');
-const trustBar = document.getElementById('trust-bar');
-const trustNum = document.getElementById('trust-num');
 const xpBar = document.getElementById('xp-bar');
 const xpNum = document.getElementById('xp-num');
 const personalityDisplay = document.getElementById('personality-display');
+const chatToggleBtn = document.getElementById('chat-toggle-btn');
+const chatArea = document.getElementById('chat-area');
+const chatMessages = document.getElementById('chat-messages');
+const chatInput = document.getElementById('chat-input');
+const chatSendBtn = document.getElementById('chat-send-btn');
 
 const petImage = document.getElementById('pet-image');
 const petDisplay = document.getElementById('pet-display');
@@ -132,7 +136,6 @@ function savePet() {
 //     backstory: personalityData.backstory,
 
 //     memories: [],
-//     trust: 50,
 //     xp: 0,
 //     evolutionStage: 0,
 //     sleepUntil: null
@@ -175,7 +178,6 @@ async function createNewPet(name, eggType) {
     backstory: personalityData.backstory,
 
     memories: [],
-    trust: 50,
     xp: 0,
     evolutionStage: 0,
     sleepUntil: null
@@ -239,11 +241,7 @@ function renderPet() {
 
   stageBadge.textContent = `🌱 ${evoSet.names[stage]}`;
 
-  const trustPct = Math.max(0, Math.min(100, pet.trust));
-  const xpPct = Math.max(0, Math.min(100, pet.xp % 100));
-
-  trustBar.style.width = trustPct + '%';
-  trustNum.textContent = trustPct;
+  const xpPct = Math.max(0, Math.min(100, (pet.xp % XP_PER_STAGE) / XP_PER_STAGE * 100));
 
   xpBar.style.width = xpPct + '%';
   xpNum.textContent = pet.xp;
@@ -341,7 +339,7 @@ function celebrateEvolution() {
   const stage = Math.min(pet.evolutionStage, images.length - 1);
 
   evolutionPetEmoji.innerHTML =
-    `<img src="images/${images[stage]}.png" width="120">`;
+    `<img src="images/${images[stage]}.png" width="220">`;
 
   evolutionText.textContent =
     `${pet.name} evolved into a ${getEvolutionSet(pet).names[stage]}!`;
@@ -366,7 +364,6 @@ async function performAction(action) {
         name: pet.name,
         personality: pet.personality,
         memories: pet.memories,
-        trust: pet.trust,
         xp: pet.xp,
         evolutionStage: pet.evolutionStage,
         action: action
@@ -383,7 +380,7 @@ async function performAction(action) {
 
   } catch (err) {
     console.error(err);
-    setSpeech("Uh oh, I couldn't think of anything to say. Check your Gemini API key in .env!");
+    setSpeech("Uh oh, I couldn't think of anything to say. Check your Groq API key in .env!");
   } finally {
     loadingIndicator.classList.add('hidden');
     if (!pet.sleepUntil) setButtonsDisabled(false);
@@ -393,7 +390,6 @@ async function performAction(action) {
 function applyResponse(data, action) {
   const wasStage = pet.evolutionStage;
 
-  pet.trust = Math.max(0, Math.min(100, pet.trust + (data.trustChange || 0)));
   pet.xp = Math.max(0, pet.xp + (data.xpGain || 0));
 
   if (data.personalityUpdate && data.personalityUpdate.trim() !== '') {
@@ -407,8 +403,10 @@ function applyResponse(data, action) {
 
   let didEvolve = false;
   const evoSet = getEvolutionSet(pet);
-  if (data.evolution === true && pet.evolutionStage < IMAGE_SETS[pet.eggType].length - 1) {
-    pet.evolutionStage += 1;
+  const maxStage = IMAGE_SETS[pet.eggType].length - 1;
+  const targetStage = Math.min(maxStage, Math.floor(pet.xp / XP_PER_STAGE));
+  if (targetStage > pet.evolutionStage) {
+    pet.evolutionStage = targetStage;
     didEvolve = true;
   }
 
@@ -491,6 +489,59 @@ actionButtons.forEach(btn => {
 petDisplay.addEventListener('click', () => {
   reactPetAnimation();
   spawnSparkles();
+});
+
+chatToggleBtn.addEventListener('click', () => {
+  chatArea.classList.toggle('hidden');
+  if (!chatArea.classList.contains('hidden')) chatInput.focus();
+});
+
+function appendChatMessage(sender, text) {
+  const div = document.createElement('div');
+  div.className = `chat-msg chat-msg-${sender}`;
+  div.textContent = text;
+  chatMessages.appendChild(div);
+  chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+async function sendChatMessage() {
+  const text = chatInput.value.trim();
+  if (!text) return;
+
+  appendChatMessage('player', text);
+  chatInput.value = '';
+  chatSendBtn.disabled = true;
+  chatInput.disabled = true;
+
+  try {
+    const res = await fetch('/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name: pet.name,
+        personality: pet.personality,
+        memories: pet.memories,
+        xp: pet.xp,
+        evolutionStage: pet.evolutionStage,
+        action: text
+      })
+    });
+    const data = await res.json();
+    applyResponse(data, 'chat');
+    appendChatMessage('bot', data.message || '...');
+  } catch (err) {
+    console.error(err);
+    appendChatMessage('bot', "Uh oh, I couldn't think of a reply!");
+  } finally {
+    chatSendBtn.disabled = false;
+    chatInput.disabled = false;
+    chatInput.focus();
+  }
+}
+
+chatSendBtn.addEventListener('click', sendChatMessage);
+chatInput.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') sendChatMessage();
 });
 
 init();

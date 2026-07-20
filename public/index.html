@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title> BuddyBot (* ^ ω ^) - Your Virtual AI Pet!</title>
+<title>✨ BuddyBot ✨ - Your Virtual AI Pet!</title>
 <link rel="stylesheet" href="style.css">
 <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400;600;700;800&display=swap" rel="stylesheet">
 </head>
@@ -11,7 +11,7 @@
 
 <div class="stars-bg"></div>
 
-<!-- MOVING BANNER -->
+<!-- MARQUEE HEADER -->
 <div class="marquee-banner">
   <marquee behavior="scroll" direction="left" scrollamount="5">
     🌟 WELCOME TO BUDDYBOT 🌟 RAISE YOUR OWN AI-POWERED VIRTUAL PET 🌟 FEED IT, PLAY WITH IT, WATCH IT EVOLVE 🌟 THANKS FOR PLAYING 🌟
@@ -21,14 +21,15 @@
 <div class="page-wrap">
 
   <header class="site-header">
-    <h1 class="logo-title"> BuddyBot (* ^ ω ^)</h1>
-    <p class="tagline"> Your very own AI companion! </p>
+    <h1 class="logo-title">💫 BuddyBot 💫</h1>
+    <p class="tagline">~ your very own AI companion ~</p>
   </header>
 
   <!-- HOMEPAGE SCREEN -->
   <div id="home-screen" class="panel home-panel">
     <div class="panel-inner">
       <img src="images/logo.png" alt="BuddyBot" class="home-logo-img">
+      <p class="setup-text">~ your very own AI companion ~</p>
       <button id="play-btn-home" class="glossy-btn big-btn">▶ PLAY</button>
     </div>
   </div>
@@ -59,10 +60,10 @@
   <!-- NAME SETUP SCREEN -->
   <div id="setup-screen" class="panel setup-panel hidden">
     <div class="panel-inner">
-      <h2 id="setup-egg-emoji-heading"> Adopt a New BuddyBot!</h2>
-      <p class="setup-text">What will you name your new buddy?</p>
+      <h2 id="setup-egg-emoji-heading">🥚 Adopt a New BuddyBot!</h2>
+      <p class="setup-text">What will you name your new best friend?</p>
       <input type="text" id="pet-name-input" maxlength="16" placeholder="Type a name...">
-      <button id="start-btn" class="glossy-btn big-btn"> Hatch BuddyBot! </button>
+      <button id="start-btn" class="glossy-btn big-btn">✨ Hatch BuddyBot! ✨</button>
       <button id="back-to-egg-btn" class="glossy-btn small-btn reset-btn">⬅️ Pick a different egg</button>
     </div>
   </div>
@@ -77,12 +78,6 @@
         <div class="stage-badge" id="stage-badge">🌱 Egg</div>
 
         <div class="stat-row">
-          <span class="stat-label">❤️ Trust</span>
-          <div class="bar-bg"><div class="bar-fill trust-fill" id="trust-bar"></div></div>
-          <span class="stat-num" id="trust-num">50</span>
-        </div>
-
-        <div class="stat-row">
           <span class="stat-label">⭐ XP</span>
           <div class="bar-bg"><div class="bar-fill xp-fill" id="xp-bar"></div></div>
           <span class="stat-num" id="xp-num">0</span>
@@ -91,6 +86,17 @@
         <div class="personality-box">
           <span class="stat-label">🧠 Personality</span>
           <p id="personality-display">curious and friendly</p>
+        </div>
+
+        <div class="chat-box">
+          <button id="chat-toggle-btn" class="glossy-btn small-btn">💬 Chat</button>
+          <div class="chat-area hidden" id="chat-area">
+            <div class="chat-messages" id="chat-messages"></div>
+            <div class="chat-input-row">
+              <input type="text" id="chat-input" maxlength="200" placeholder="Say something...">
+              <button id="chat-send-btn" class="glossy-btn small-btn">Send</button>
+            </div>
+          </div>
         </div>
 
         <button id="reset-btn" class="glossy-btn small-btn reset-btn">🔄 Get a new pet!</button>
@@ -121,8 +127,8 @@
       <button class="glossy-btn action-btn" id="play-btn" data-action="play">
         <span class="btn-icon">🎮</span><span>Play</span>
       </button>
-      <button class="glossy-btn action-btn" id="talk-btn" data-action="talk">
-        <span class="btn-icon">💬</span><span>Talk</span>
+      <button class="glossy-btn action-btn" id="hug-btn" data-action="hug">
+        <span class="btn-icon">🤗</span><span>Hug</span>
       </button>
       <button class="glossy-btn action-btn" id="sleep-btn" data-action="sleep">
         <span class="btn-icon">😴</span><span>Sleep</span>
@@ -147,7 +153,8 @@
 <div id="evolution-overlay" class="evolution-overlay hidden">
   <div class="evolution-modal">
     <div class="confetti" id="confetti-container"></div>
-    <h2> EVOLUTION! o(>ω<)o</h2>
+    <h2>🎉 EVOLUTION! 🎉</h2>
+    <p id="evolution-pet-emoji" class="evolution-emoji">🐣</p>
     <p id="evolution-text">Your BuddyBot has evolved!</p>
     <button id="evolution-close-btn" class="glossy-btn big-btn">Yay!! ✨</button>
   </div>

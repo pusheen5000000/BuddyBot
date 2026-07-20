@@ -384,6 +384,69 @@ body {
   text-align: center;
 }
 
+.chat-box {
+  margin-top: 10px;
+}
+
+.chat-area {
+  margin-top: 8px;
+  background: #fff3fb;
+  border: 2px dashed #ffc2e0;
+  border-radius: 0;
+  padding: 8px;
+}
+
+.chat-messages {
+  max-height: 130px;
+  overflow-y: auto;
+  margin-bottom: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.chat-msg {
+  font-size: 12px;
+  padding: 6px 10px;
+  border-radius: 0;
+  max-width: 85%;
+  word-wrap: break-word;
+}
+
+.chat-msg-player {
+  align-self: flex-end;
+  background: #d9e6ff;
+  border: 2px solid #9281e5;
+  color: #3a2f66;
+}
+
+.chat-msg-bot {
+  align-self: flex-start;
+  background: #fff;
+  border: 2px solid #ff9ecf;
+  color: #5b4b8a;
+}
+
+.chat-input-row {
+  display: flex;
+  gap: 6px;
+}
+
+#chat-input {
+  flex: 1;
+  padding: 8px 10px;
+  font-size: 12px;
+  font-family: 'Source Code Pro', monospace;
+  border: 2px solid #ff9ecf;
+  border-radius: 0;
+  outline: none;
+  background: #fffdf7;
+}
+
+#chat-input:focus {
+  border-color: #ff3d81;
+}
+
 /* PET STAGE */
 .pet-stage {
   flex: 2 1 260px;
@@ -632,7 +695,7 @@ body {
   border-radius: 0;
   padding: 30px 26px;
   text-align: center;
-  max-width: 320px;
+  max-width: 400px;
   position: relative;
   box-shadow: 0 0 40px rgba(255,215,0,0.7);
   animation: evo-pop 0.4s cubic-bezier(.34,1.56,.64,1);
