@@ -1,0 +1,55 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BuddyBot</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="app">
+  <div class="pet-card">
+    <div class="avatar-wrap">
+      <div id="avatar" class="avatar">🥚</div>
+    </div>
+
+    <h1 id="petName">BuddyBot</h1>
+    <p id="evolutionStage" class="stage">Stage: Egg</p>
+
+    <div class="message-box" id="messageBox">
+      <p id="message">Hi! I'm just hatching... talk to me!</p>
+    </div>
+
+    <div class="talk-row">
+      <input id="talkInput" type="text" placeholder="Say something to BuddyBot..." />
+      <button id="talkSendBtn" onclick="talk()">➤</button>
+    </div>
+
+    <div class="stats">
+      <div class="stat">
+        <span class="stat-label">Trust</span>
+        <div class="bar"><div id="trustBar" class="bar-fill trust-fill"></div></div>
+        <span id="trustValue">0</span>
+      </div>
+      <div class="stat">
+        <span class="stat-label">XP</span>
+        <div class="bar"><div id="xpBar" class="bar-fill xp-fill"></div></div>
+        <span id="xpValue">0</span>
+      </div>
+    </div>
+
+    <div class="buttons">
+      <button id="feedBtn" onclick="feed()">🍎 Feed</button>
+      <button id="playBtn" onclick="play()">🎮 Play</button>
+      <button id="sleepBtn" onclick="sleep()">😴 Sleep</button>
+    </div>
+
+    <button class="reset-btn" onclick="resetPet()">Reset</button>
+  </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
