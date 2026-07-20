@@ -1,7 +1,9 @@
 # BuddyBot! (b ᵔ▽ᵔ)b
 
 BuddyBot is an AI-powered virtual pet that evolves! Starting as an egg, BuddyBot develops its own personality, memories, and evolution path through real time interactions. 
+
 It has 5 stages, egg -> baby -> teen -> adult -> legendary!
+
 I am proud of creating a game where each player's experience is unique. BuddyBot does not have a fixed personality or evolution path, the player and AI shapes the outcome. 
 I also loved the idea of combining the nostalgic feeling of classic browser games with AI technology to create an interactive experience to enhance the games!
 
