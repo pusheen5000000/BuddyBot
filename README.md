@@ -1,6 +1,6 @@
 # BuddyBot! (b ᵔ▽ᵔ)b
 
-BuddyBot is an AI-powered virtual pet that evolves! Starting as an egg, BuddyBot develops its own personality, memories, and evolution path through real time interactions. 
+BuddyBot is an AI-powered virtual pet that evolves! Starting as an egg, BuddyBot develops its own personality, memories, and evolution path through real time interactions. I was inspired by virtual pet and browser games of the early internet! I wanted to reimagine it with modern AI by creating a pet that doesn't follow scripted interaction, but learns, remembers, and evolves based on the players choices: ex: there isn't a set amount of XP the pet gets from each action, but Gemini will choose the amount based on what the player does.
 
 It has 5 stages, egg -> baby -> teen -> adult -> legendary!
 
