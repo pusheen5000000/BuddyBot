@@ -1,20 +1,35 @@
-# 💫 BuddyBot
+# BuddyBot! (b ᵔ▽ᵔ)b
 
-An AI-powered virtual pet game with a nostalgic early-2000s Flash game vibe (think Neopets / Tamagotchi). BuddyBot's brain is powered by the **Gemini API** — it generates dialogue, reacts emotionally to your actions, remembers past moments, and evolves over time.
+BuddyBot is an AI-powered virtual pet that evolves! Starting as an egg, BuddyBot develops its own personality, memories, and evolution path through real time interactions. 
+It has 5 stages, egg -> baby -> teen -> adult -> legendary!
+I am proud of creating a game where each player's experience is unique. BuddyBot does not have a fixed personality or evolution path, the player and AI shapes the outcome. 
+I also loved the idea of combining the nostalgic feeling of classic browser games with AI technology to create an interactive experience to enhance the games!
 
 ## Features
-- 🥚 → 🐣 → 🐥 → 🦄 → 🐉 evolution stages
-- ❤️ Trust and ⭐ XP stats that grow through interaction
-- 💬 AI-generated dialogue that reacts to Feed / Play / Talk / Explore actions
-- 🧠 Personality that can shift based on how you treat your pet
-- 📔 A memory log so BuddyBot "remembers" your history together
-- 🎉 Evolution celebration animation with confetti
-- 💾 Progress saved in `localStorage` (client-side, no database needed)
+Players can:
+- Feed, play, talk, and sleep
+- Create memories that influence future conversations
+- Watch BuddyBot evolve from an egg into a legendary pet
+
+Unlike traditional virtual pets, BuddyBot uses Gemini to generate responses, adapt its personality, and create a different journey for every player.
+
 
 ## Tech Stack
-- **Frontend:** Plain HTML / CSS / JavaScript (no frameworks)
-- **Backend:** Node.js + Express
-- **AI:** Google Gemini API (`gemini-2.0-flash`)
+BuddyBot was built as a full-stack web application.
+
+Frontend:
+- HTML, CSS, and JavaScript
+
+Backend:
+- Node.js + Express server
+- Gemini API integration 
+
+AI System:
+- Gemini acts as BuddyBot's personality engine
+- Each interaction sends the pet's current stats, personality traits, and recent memories to Gemini
+- Gemini generates responses, updates trust and XP, creates memories, and determines possible evolution changes
+
+Pet data is stored locally so each player's BuddyBot maintains its unique journey.
 
 ## Setup
 
@@ -39,39 +54,20 @@ An AI-powered virtual pet game with a nostalgic early-2000s Flash game vibe (thi
    ```
    http://localhost:3000
    ```
-
-## How It Works
-
-1. Player clicks an action button (Feed / Play / Talk / Explore).
-2. Frontend sends the pet's current state (name, personality, memories, trust, xp, evolution stage) + the action to `POST /chat`.
-3. The backend builds a prompt with all that context and sends it to Gemini.
-4. Gemini returns strict JSON:
-   ```json
-   {
-     "message": "BuddyBot's reply",
-     "trustChange": 5,
-     "xpGain": 10,
-     "newMemory": "We played fetch together!",
-     "personalityUpdate": "",
-     "evolution": false
-   }
-   ```
-5. The frontend updates the speech bubble, stat bars, memory log, and (if `evolution` is true) plays the evolution celebration.
-
-## Notes
-- Sound effects are placeholders (`console.log` messages) — swap `playSound()` in `script.js` for real `Audio()` calls once you add `.mp3`/`.wav` files.
-- The pet's PNG is currently an emoji placeholder (`🥚🐣🐥🦄🐉` in `EVOLUTION_EMOJIS` in `script.js`) — swap these for `<img>` tags once your pet art is ready.
-- All game state lives in `localStorage` under the key `buddybot-pet-data`. Click "🔄 Release Pet" to reset.
-
 ## Project Structure
+
 ```
 BuddyBot/
 ├── public/
-│   ├── index.html
-│   ├── style.css
-│   └── script.js
-├── server.js
-├── package.json
+│   ├── index.html        
+│   ├── style.css         
+│   ├── script.js         
+│   ├── images/           
+│   └── sounds/           
+│
+├── server.js           
+├── package.json        
 ├── .env
-└── README.md
+├── .gitignore               
+└── README.md             
 ```
