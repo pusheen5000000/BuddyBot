@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>✨ BuddyBot ✨ - Your Virtual AI Pet!</title>
+<title> BuddyBot (* ^ ω ^) - Your Virtual AI Pet!</title>
 <link rel="stylesheet" href="style.css">
 <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400;600;700;800&display=swap" rel="stylesheet">
 </head>
@@ -11,22 +11,30 @@
 
 <div class="stars-bg"></div>
 
-<!-- MARQUEE HEADER -->
+<!-- MOVING BANNER -->
 <div class="marquee-banner">
   <marquee behavior="scroll" direction="left" scrollamount="5">
-    🌟 WELCOME TO BUDDYBOT.COM 🌟 RAISE YOUR OWN AI-POWERED VIRTUAL PET 🌟 FEED IT, PLAY WITH IT, WATCH IT EVOLVE 🌟 THANKS FOR PLAYING 🌟
+    🌟 WELCOME TO BUDDYBOT 🌟 RAISE YOUR OWN AI-POWERED VIRTUAL PET 🌟 FEED IT, PLAY WITH IT, WATCH IT EVOLVE 🌟 THANKS FOR PLAYING 🌟
   </marquee>
 </div>
 
 <div class="page-wrap">
 
   <header class="site-header">
-    <h1 class="logo-title">💫 BuddyBot 💫</h1>
-    <p class="tagline">~ your very own AI companion ~</p>
+    <h1 class="logo-title"> BuddyBot (* ^ ω ^)</h1>
+    <p class="tagline"> Your very own AI companion! </p>
   </header>
 
+  <!-- HOMEPAGE SCREEN -->
+  <div id="home-screen" class="panel home-panel">
+    <div class="panel-inner">
+      <img src="images/logo.png" alt="BuddyBot" class="home-logo-img">
+      <button id="play-btn-home" class="glossy-btn big-btn">▶ PLAY</button>
+    </div>
+  </div>
+
   <!-- EGG SELECTION SCREEN -->
-  <div id="egg-select-screen" class="panel egg-select-panel">
+  <div id="egg-select-screen" class="panel egg-select-panel hidden">
     <div class="panel-inner">
       <h2>🥚 Choose Your Egg!</h2>
       <p class="setup-text">Which BuddyBot egg will you adopt?</p>
@@ -51,10 +59,10 @@
   <!-- NAME SETUP SCREEN -->
   <div id="setup-screen" class="panel setup-panel hidden">
     <div class="panel-inner">
-      <h2 id="setup-egg-emoji-heading">🥚 Adopt a New BuddyBot!</h2>
-      <p class="setup-text">What will you name your new best friend?</p>
+      <h2 id="setup-egg-emoji-heading"> Adopt a New BuddyBot!</h2>
+      <p class="setup-text">What will you name your new buddy?</p>
       <input type="text" id="pet-name-input" maxlength="16" placeholder="Type a name...">
-      <button id="start-btn" class="glossy-btn big-btn">✨ Hatch BuddyBot! ✨</button>
+      <button id="start-btn" class="glossy-btn big-btn"> Hatch BuddyBot! </button>
       <button id="back-to-egg-btn" class="glossy-btn small-btn reset-btn">⬅️ Pick a different egg</button>
     </div>
   </div>
@@ -139,8 +147,7 @@
 <div id="evolution-overlay" class="evolution-overlay hidden">
   <div class="evolution-modal">
     <div class="confetti" id="confetti-container"></div>
-    <h2>🎉 EVOLUTION! 🎉</h2>
-    <p id="evolution-pet-emoji" class="evolution-emoji">🐣</p>
+    <h2> EVOLUTION! o(>ω<)o</h2>
     <p id="evolution-text">Your BuddyBot has evolved!</p>
     <button id="evolution-close-btn" class="glossy-btn big-btn">Yay!! ✨</button>
   </div>
