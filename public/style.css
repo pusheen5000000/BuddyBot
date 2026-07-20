@@ -688,12 +688,44 @@ body {
 #back-to-egg-btn {
   display: block;
   margin: 18px auto 0;
+}#pet-image {
+  object-fit: contain;
+  max-width: 100%;
 }
 
-#pet-image {
-    width: 180px;
-    height: 180px;
-    object-fit: contain;
-    animation: idle-float 2.4s ease-in-out infinite;
-    filter: drop-shadow(0 6px 4px rgba(0,0,0,0.2));
+/* Egg */
+#pet-image.stage-0 {
+  width: 1px;
+  height: 1px;
+}
+
+/* Baby */
+#pet-image.stage-1 {
+  width: 210px;
+  height: 210px;
+}
+
+/* Teen */
+#pet-image.stage-2 {
+  width: 240px;
+  height: 240px;
+}
+
+/* Adult */
+#pet-image.stage-3 {
+  width: 260px;
+  height: 260px;
+}
+
+/* Normal Legendary */
+#pet-image.stage-4 {
+  width: 280px;
+  height: 280px;
+}
+
+/* Special Legendary1 */
+#pet-image.legendary1 {
+  width: 280px;
+  height: 280px;
+  transform: scale(1.7);
 }

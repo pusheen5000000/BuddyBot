@@ -50,13 +50,6 @@ const SOUND_PLACEHOLDERS = {
   wake: '🔊 *stretch stretch*',
   evolve: '🔊 *TA-DA sparkle jingle*'
 };
-  const imageNames = [
-    "egg1",
-    "baby1",
-    "teen1",
-    "adult1",
-    "legendary1"
-  ];
 
 let pet = null;
 let sleepTimer = null;
@@ -193,6 +186,7 @@ function init() {
   if (loadPet()) {
     showGameScreen();
     renderPet();
+    petImage.className = `stage-${stage}`;
     if (pet.sleepUntil && pet.sleepUntil > Date.now()) {
       enterSleep(pet.sleepUntil - Date.now());
     }
@@ -221,28 +215,30 @@ function showGameScreen() {
 
 function renderPet() {
   petNameDisplay.textContent = pet.name;
+
   const evoSet = getEvolutionSet(pet);
 
   const images = IMAGE_SETS[pet.eggType];
   const stage = Math.min(pet.evolutionStage, images.length - 1);
 
-  petImage.src = `images/${images[stage]}.png`; 
+  petImage.src = `images/${images[stage]}.png`;
 
-  const imageNames = [
-    "egg1",
-    "baby1",
-    "teen1",
-    "adult1",
-    "legendary1"
-  ];
+  petImage.className = "";
+  petImage.classList.add(`stage-${stage}`);
 
-  petImage.src = `images/${imageNames[stage]}.png`;
+  if (pet.eggType === "egg1" && stage === 4) {
+    petImage.classList.add("legendary1");
+  }
+  petImage.className = images[stage];
+
   stageBadge.textContent = `🌱 ${evoSet.names[stage]}`;
 
   const trustPct = Math.max(0, Math.min(100, pet.trust));
   const xpPct = Math.max(0, Math.min(100, pet.xp % 100));
+
   trustBar.style.width = trustPct + '%';
   trustNum.textContent = trustPct;
+
   xpBar.style.width = xpPct + '%';
   xpNum.textContent = pet.xp;
 
@@ -334,24 +330,17 @@ function wakeUp() {
 
 function celebrateEvolution() {
   playSound('evolve');
-  const evoSet = getEvolutionSet(pet);
-  const stage = Math.min(pet.evolutionStage, evoSet.emojis.length - 1);
-  evolutionPetEmoji.innerHTML =
-    `<img src="images/${IMAGE_NAMES[stage]}.png" width="120">`;
-  evolutionText.textContent = `${pet.name} evolved into a ${evoSet.names[stage]}!`;
-  evolutionOverlay.classList.remove('hidden');
 
-  confettiContainer.innerHTML = '';
-  const confettiEmojis = ['🎉', '✨', '🎊', '⭐', '💖'];
-  for (let i = 0; i < 24; i++) {
-    const piece = document.createElement('span');
-    piece.className = 'confetti-piece';
-    piece.textContent = confettiEmojis[Math.floor(Math.random() * confettiEmojis.length)];
-    piece.style.left = Math.random() * 100 + '%';
-    piece.style.animationDelay = (Math.random() * 0.8) + 's';
-    piece.style.fontSize = (14 + Math.random() * 14) + 'px';
-    confettiContainer.appendChild(piece);
-  }
+  const images = IMAGE_SETS[pet.eggType];
+  const stage = Math.min(pet.evolutionStage, images.length - 1);
+
+  evolutionPetEmoji.innerHTML =
+    `<img src="images/${images[stage]}.png" width="120">`;
+
+  evolutionText.textContent =
+    `${pet.name} evolved into a ${getEvolutionSet(pet).names[stage]}!`;
+
+  evolutionOverlay.classList.remove('hidden');
 }
 
 evolutionCloseBtn.addEventListener('click', () => {
@@ -412,7 +401,7 @@ function applyResponse(data, action) {
 
   let didEvolve = false;
   const evoSet = getEvolutionSet(pet);
-  if (data.evolution === true && pet.evolutionStage < evoSet.emojis.length - 1) {
+  if (data.evolution === true && pet.evolutionStage < IMAGE_SETS[pet.eggType].length - 1) {
     pet.evolutionStage += 1;
     didEvolve = true;
   }
@@ -499,3 +488,4 @@ petDisplay.addEventListener('click', () => {
 });
 
 init();
+
