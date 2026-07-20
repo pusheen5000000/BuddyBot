@@ -42,14 +42,14 @@ function getEvolutionSet(petObj) {
   return EGG_TYPES[petObj.eggType] || EGG_TYPES[DEFAULT_EGG_TYPE];
 }
 
-// const SOUND_PLACEHOLDERS = {
-//   feed: '🔊 *nom nom nom*',
-//   play: '🔊 *boing boing*',
-//   talk: '🔊 *chirp chirp*',
-//   sleep: '🔊 *yaaawn*',
-//   wake: '🔊 *stretch stretch*',
-//   evolve: '🔊 *TA-DA sparkle jingle*'
-// };
+const SOUND_PLACEHOLDERS = {
+  feed: '🔊 *nom nom nom*',
+  play: '🔊 *boing boing*',
+  talk: '🔊 *chirp chirp*',
+  sleep: '🔊 *yaaawn*',
+  wake: '🔊 *stretch stretch*',
+  evolve: '🔊 *TA-DA sparkle jingle*'
+};
 
 let pet = null;
 let sleepTimer = null;
@@ -108,20 +108,63 @@ function savePet() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(pet));
 }
 
+// async function createNewPet(name, eggType) {
+
+//   const response = await fetch('/create-personality', {
+//     method: 'POST',
+//     headers: {
+//       'Content-Type': 'application/json'
+//     },
+//     body: JSON.stringify({
+//       name,
+//       eggType
+//     })
+//   });
+
+//   const personalityData = await response.json();
+
+//   pet = {
+//     name: name,
+//     eggType: eggType || DEFAULT_EGG_TYPE,
+
+//     personality: personalityData.personality,
+//     favoriteThing: personalityData.favoriteThing,
+//     backstory: personalityData.backstory,
+
+//     memories: [],
+//     trust: 50,
+//     xp: 0,
+//     evolutionStage: 0,
+//     sleepUntil: null
+//   };
+
+//   savePet();
+// }
+
 async function createNewPet(name, eggType) {
 
-  const response = await fetch('/create-personality', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
+  // Temporary fake Gemini response
+  const personalities = [
+    {
+      personality: "playful and curious",
+      favoriteThing: "collecting shiny stars",
+      backstory: "A tiny BuddyBot that hatched from a magical egg!"
     },
-    body: JSON.stringify({
-      name,
-      eggType
-    })
-  });
+    {
+      personality: "silly and energetic",
+      favoriteThing: "playing games",
+      backstory: "A cheerful BuddyBot ready for adventures!"
+    },
+    {
+      personality: "gentle and thoughtful",
+      favoriteThing: "making new friends",
+      backstory: "A sweet BuddyBot who loves helping others!"
+    }
+  ];
 
-  const personalityData = await response.json();
+  const personalityData = personalities[
+    Math.floor(Math.random() * personalities.length)
+  ];
 
   pet = {
     name: name,
@@ -140,49 +183,6 @@ async function createNewPet(name, eggType) {
 
   savePet();
 }
-
-// async function createNewPet(name, eggType) {
-
-//   // Temporary fake Gemini response
-//   const personalities = [
-//     {
-//       personality: "playful and curious",
-//       favoriteThing: "collecting shiny stars",
-//       backstory: "A tiny BuddyBot that hatched from a magical egg!"
-//     },
-//     {
-//       personality: "silly and energetic",
-//       favoriteThing: "playing games",
-//       backstory: "A cheerful BuddyBot ready for adventures!"
-//     },
-//     {
-//       personality: "gentle and thoughtful",
-//       favoriteThing: "making new friends",
-//       backstory: "A sweet BuddyBot who loves helping others!"
-//     }
-//   ];
-
-  // const personalityData = personalities[
-  //   Math.floor(Math.random() * personalities.length)
-  // ];
-
-  // pet = {
-  //   name: name,
-  //   eggType: eggType || DEFAULT_EGG_TYPE,
-
-  //   personality: personalityData.personality,
-  //   favoriteThing: personalityData.favoriteThing,
-  //   backstory: personalityData.backstory,
-
-  //   memories: [],
-  //   trust: 50,
-  //   xp: 0,
-  //   evolutionStage: 0,
-//   //   sleepUntil: null
-//   // };
-
-//   savePet();
-// }
 
 function init() {
   loadPet();
@@ -217,17 +217,7 @@ function showGameScreen() {
   gameScreen.classList.remove('hidden');
 }
 
-playBtnHome.addEventListener('click', () => {
-  if (pet) {
-    showGameScreen();
-    renderPet();
-    if (pet.sleepUntil && pet.sleepUntil > Date.now()) {
-      enterSleep(pet.sleepUntil - Date.now());
-    }
-  } else {
-    showEggSelectScreen();
-  }
-});
+playBtnHome.addEventListener('click', showEggSelectScreen);
 
 function renderPet() {
   petNameDisplay.textContent = pet.name;
@@ -448,7 +438,7 @@ eggCards.forEach(card => {
     eggCards.forEach(c => c.classList.remove('selected'));
     card.classList.add('selected');
 
-    setupEggEmojiHeading.textContent = `Adopt Your BuddyBot!`;
+    setupEggEmojiHeading.textContent = `🥚 Adopt Your BuddyBot!`;
 
     showSetupScreen();
     petNameInput.value = '';
@@ -467,15 +457,15 @@ startBtn.addEventListener('click', async () => {
     petNameInput.placeholder = 'Please enter a name!';
     return;
   }
-startBtn.textContent = " Creating your BuddyBot...";
+startBtn.textContent = "✨ Creating your BuddyBot...";
 
 await createNewPet(name, selectedEggType);
 
 showGameScreen();
 
-startBtn.textContent = "Hatch BuddyBot!";
+startBtn.textContent = "✨ Hatch BuddyBot! ✨";
   renderPet();
-  setSpeech(`Hi, I'm ${name}! Nice to meet you!`);
+  setSpeech(`Hi, I'm ${name}! Nice to meet you! 🎉`);
 });
 
 petNameInput.addEventListener('keydown', (e) => {

@@ -97,13 +97,21 @@ Make it feel like a Tamagotchi/Neopets companion.
     })
   });
 
+  if (!response.ok) {
+    const errText = await response.text();
+    console.error('Gemini API error (create-personality):', errText);
+    throw new Error('Gemini API request failed');
+  }
+
   const data = await response.json();
 
   const text = data?.candidates?.[0]?.content?.parts?.[0]?.text || '';
 
-  return JSON.parse(
-    text.replace(/```json/g, '').replace(/```/g, '').trim()
-  );
+  const parsed = safeParseJSON(text);
+  if (!parsed) {
+    throw new Error('Gemini returned unparseable personality JSON');
+  }
+  return parsed;
 }
 app.post('/create-personality', async (req, res) => {
   try {

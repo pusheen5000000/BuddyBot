@@ -695,7 +695,7 @@ body {
   width: 70%;
   height: auto;
   display: block;
-  margin: 15px auto;
+  margin: 0 auto;
 }#pet-image {
   object-fit: contain;
   max-width: 100%;
