@@ -2,17 +2,38 @@ const STORAGE_KEY = 'buddybot-pet-data';
 
 const EGG_TYPES = {
   egg1: {
-    emojis: ['🥚', '🐣', '🔥', '🐉', '🐲'],
     names: ['Egg', 'Baby', 'Teen', 'Adult', 'Legendary']
   },
   egg2: {
-    emojis: ['🥚', '🐣', '🐟', '🐬', '🐳'],
     names: ['Egg', 'Baby', 'Teen', 'Adult', 'Legendary']
   },
   egg3: {
-    emojis: ['🥚', '🐣', '🐛', '🦋', '🦄'],
     names: ['Egg', 'Baby', 'Teen', 'Adult', 'Legendary']
   }
+};
+
+const IMAGE_SETS = {
+    egg1: [
+        "egg1",
+        "baby1",
+        "teen1",
+        "adult1",
+        "legendary1"
+    ],
+    egg2: [
+        "egg2",
+        "baby2",
+        "teen2",
+        "adult2",
+        "legendary2"
+    ],
+    egg3: [
+        "egg3",
+        "baby3",
+        "teen3",
+        "adult3",
+        "legendary3"
+    ]
 };
 
 const DEFAULT_EGG_TYPE = 'egg1';
@@ -29,6 +50,13 @@ const SOUND_PLACEHOLDERS = {
   wake: '🔊 *stretch stretch*',
   evolve: '🔊 *TA-DA sparkle jingle*'
 };
+  const imageNames = [
+    "egg1",
+    "baby1",
+    "teen1",
+    "adult1",
+    "legendary1"
+  ];
 
 let pet = null;
 let sleepTimer = null;
@@ -53,7 +81,7 @@ const xpBar = document.getElementById('xp-bar');
 const xpNum = document.getElementById('xp-num');
 const personalityDisplay = document.getElementById('personality-display');
 
-const petEmoji = document.getElementById('pet-emoji');
+const petImage = document.getElementById('pet-image');
 const petDisplay = document.getElementById('pet-display');
 const speechText = document.getElementById('speech-text');
 const petSparkles = document.getElementById('pet-sparkles');
@@ -85,20 +113,63 @@ function savePet() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(pet));
 }
 
+// async function createNewPet(name, eggType) {
+
+//   const response = await fetch('/create-personality', {
+//     method: 'POST',
+//     headers: {
+//       'Content-Type': 'application/json'
+//     },
+//     body: JSON.stringify({
+//       name,
+//       eggType
+//     })
+//   });
+
+//   const personalityData = await response.json();
+
+//   pet = {
+//     name: name,
+//     eggType: eggType || DEFAULT_EGG_TYPE,
+
+//     personality: personalityData.personality,
+//     favoriteThing: personalityData.favoriteThing,
+//     backstory: personalityData.backstory,
+
+//     memories: [],
+//     trust: 50,
+//     xp: 0,
+//     evolutionStage: 0,
+//     sleepUntil: null
+//   };
+
+//   savePet();
+// }
+
 async function createNewPet(name, eggType) {
 
-  const response = await fetch('/create-personality', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
+  // Temporary fake Gemini response
+  const personalities = [
+    {
+      personality: "playful and curious",
+      favoriteThing: "collecting shiny stars",
+      backstory: "A tiny BuddyBot that hatched from a magical egg!"
     },
-    body: JSON.stringify({
-      name,
-      eggType
-    })
-  });
+    {
+      personality: "silly and energetic",
+      favoriteThing: "playing games",
+      backstory: "A cheerful BuddyBot ready for adventures!"
+    },
+    {
+      personality: "gentle and thoughtful",
+      favoriteThing: "making new friends",
+      backstory: "A sweet BuddyBot who loves helping others!"
+    }
+  ];
 
-  const personalityData = await response.json();
+  const personalityData = personalities[
+    Math.floor(Math.random() * personalities.length)
+  ];
 
   pet = {
     name: name,
@@ -151,8 +222,21 @@ function showGameScreen() {
 function renderPet() {
   petNameDisplay.textContent = pet.name;
   const evoSet = getEvolutionSet(pet);
-  const stage = Math.min(pet.evolutionStage, evoSet.emojis.length - 1);
-  petEmoji.textContent = evoSet.emojis[stage];
+
+  const images = IMAGE_SETS[pet.eggType];
+  const stage = Math.min(pet.evolutionStage, images.length - 1);
+
+  petImage.src = `images/${images[stage]}.png`; 
+
+  const imageNames = [
+    "egg1",
+    "baby1",
+    "teen1",
+    "adult1",
+    "legendary1"
+  ];
+
+  petImage.src = `images/${imageNames[stage]}.png`;
   stageBadge.textContent = `🌱 ${evoSet.names[stage]}`;
 
   const trustPct = Math.max(0, Math.min(100, pet.trust));
@@ -252,7 +336,8 @@ function celebrateEvolution() {
   playSound('evolve');
   const evoSet = getEvolutionSet(pet);
   const stage = Math.min(pet.evolutionStage, evoSet.emojis.length - 1);
-  evolutionPetEmoji.textContent = evoSet.emojis[stage];
+  evolutionPetEmoji.innerHTML =
+    `<img src="images/${IMAGE_NAMES[stage]}.png" width="120">`;
   evolutionText.textContent = `${pet.name} evolved into a ${evoSet.names[stage]}!`;
   evolutionOverlay.classList.remove('hidden');
 
