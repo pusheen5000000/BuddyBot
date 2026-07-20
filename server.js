@@ -5,9 +5,8 @@ const fetch = require('node-fetch');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-const GROQ_API_KEY = process.env.GROQ_API_KEY;
-const GROQ_URL = 'https://api.groq.com/openai/v1/chat/completions';
-const GROQ_MODEL = 'llama-3.3-70b-versatile';
+const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`;
 
 app.use(cors());
 app.use(express.json());
@@ -75,33 +74,39 @@ Return ONLY JSON:
 Make it feel like a Tamagotchi/Neopets companion.
 `;
 
-  const response = await fetch(GROQ_URL, {
+  const response = await fetch(GEMINI_URL, {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${GROQ_API_KEY}`
+      'Content-Type': 'application/json'
     },
     body: JSON.stringify({
-      model: GROQ_MODEL,
-      messages: [{ role: 'user', content: prompt }],
-      temperature: 1,
-      max_tokens: 200
+      contents: [
+        {
+          parts: [
+            { text: prompt }
+          ]
+        }
+      ],
+      generationConfig: {
+        temperature: 1,
+        maxOutputTokens: 200
+      }
     })
   });
 
   if (!response.ok) {
     const errText = await response.text();
-    console.error('Groq API error (create-personality):', errText);
-    throw new Error('Groq API request failed');
+    console.error('Gemini API error (create-personality):', errText);
+    throw new Error('Gemini API request failed');
   }
 
   const data = await response.json();
 
-  const text = data?.choices?.[0]?.message?.content || '';
+  const text = data?.candidates?.[0]?.content?.parts?.[0]?.text || '';
 
   const parsed = safeParseJSON(text);
   if (!parsed) {
-    throw new Error('Groq returned unparseable personality JSON');
+    throw new Error('Gemini returned unparseable personality JSON');
   }
   return parsed;
 }
@@ -132,8 +137,8 @@ app.post('/chat', async (req, res) => {
       return res.status(400).json({ error: 'Missing required fields: name and action' });
     }
 
-    if (!GROQ_API_KEY || GROQ_API_KEY === 'paste_your_groq_api_key_here') {
-      return res.status(500).json({ error: 'Groq API key is not configured on the server (.env)' });
+    if (!GEMINI_API_KEY || GEMINI_API_KEY === 'paste_your_gemini_api_key_here') {
+      return res.status(500).json({ error: 'Gemini API key is not configured on the server (.env)' });
     }
 
     const prompt = buildPrompt({
@@ -145,28 +150,23 @@ app.post('/chat', async (req, res) => {
       action
     });
 
-    const groqRes = await fetch(GROQ_URL, {
+    const geminiRes = await fetch(GEMINI_URL, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${GROQ_API_KEY}`
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        model: GROQ_MODEL,
-        messages: [{ role: 'user', content: prompt }],
-        temperature: 0.9,
-        max_tokens: 300
+        contents: [{ parts: [{ text: prompt }] }],
+        generationConfig: { temperature: 0.9, maxOutputTokens: 300 }
       })
     });
 
-    if (!groqRes.ok) {
-      const errText = await groqRes.text();
-      console.error('Groq API error:', errText);
-      return res.status(502).json({ error: 'Groq API request failed' });
+    if (!geminiRes.ok) {
+      const errText = await geminiRes.text();
+      console.error('Gemini API error:', errText);
+      return res.status(502).json({ error: 'Gemini API request failed' });
     }
 
-    const data = await groqRes.json();
-    const rawText = data?.choices?.[0]?.message?.content || '';
+    const data = await geminiRes.json();
+    const rawText = data?.candidates?.[0]?.content?.parts?.[0]?.text || '';
     const parsed = safeParseJSON(rawText);
 
     if (!parsed) {

@@ -43,15 +43,6 @@ function getEvolutionSet(petObj) {
   return EGG_TYPES[petObj.eggType] || EGG_TYPES[DEFAULT_EGG_TYPE];
 }
 
-const SOUND_PLACEHOLDERS = {
-  feed: '🔊 *nom nom nom*',
-  play: '🔊 *boing boing*',
-  hug: '🔊 *squeeze squeeze*',
-  sleep: '🔊 *yaaawn*',
-  wake: '🔊 *stretch stretch*',
-  evolve: '🔊 *TA-DA sparkle jingle*'
-};
-
 let pet = null;
 let sleepTimer = null;
 
@@ -275,10 +266,6 @@ function setSpeech(text) {
   bubble.style.animation = 'pop-in 0.25s ease';
 }
 
-function playSound(key) {
-  console.log(SOUND_PLACEHOLDERS[key] || '🔊 *sound*');
-}
-
 function spawnSparkles() {
   for (let i = 0; i < 6; i++) {
     const s = document.createElement('span');
@@ -328,12 +315,10 @@ function wakeUp() {
   savePet();
   petDisplay.classList.remove('asleep');
   setButtonsDisabled(false);
-  playSound('wake');
   setSpeech(`${pet.name} wakes up, stretching! 🌤️`);
 }
 
 function celebrateEvolution() {
-  playSound('evolve');
 
   const images = IMAGE_SETS[pet.eggType];
   const stage = Math.min(pet.evolutionStage, images.length - 1);
@@ -380,7 +365,7 @@ async function performAction(action) {
 
   } catch (err) {
     console.error(err);
-    setSpeech("Uh oh, I couldn't think of anything to say. Check your Groq API key in .env!");
+    setSpeech("Uh oh, I couldn't think of anything to say. Check your Gemini API key in .env!");
   } finally {
     loadingIndicator.classList.add('hidden');
     if (!pet.sleepUntil) setButtonsDisabled(false);
@@ -481,7 +466,6 @@ resetBtn.addEventListener('click', () => {
 actionButtons.forEach(btn => {
   btn.addEventListener('click', () => {
     const action = btn.getAttribute('data-action');
-    playSound(action);
     performAction(action);
   });
 });
