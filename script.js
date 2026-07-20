@@ -88,12 +88,18 @@ function addMemory(entry) {
 }
 
 async function askGemini(action, userMessage) {
-  // Placeholder for Gemini API integration.
-  // Should POST { action, userMessage, petData } to your backend
-  // (e.g. /api/gemini) which holds the Gemini API key server-side,
-  // and return an AI-generated response string.
-  // Do not add API keys here.
-  return null;
+  try {
+    const response = await fetch("/api/gemini", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ action, userMessage, petData })
+    });
+    const data = await response.json();
+    return data.message;
+  } catch (err) {
+    console.error("Gemini call failed:", err);
+    return null;
+  }
 }
 
 function setButtonsEnabled(enabled) {
