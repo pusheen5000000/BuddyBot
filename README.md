@@ -64,8 +64,7 @@ BuddyBot/
 │   ├── index.html        
 │   ├── style.css         
 │   ├── script.js         
-│   ├── images/           
-│   └── sounds/           
+│   └── images/                    
 │
 ├── server.js           
 ├── package.json        
