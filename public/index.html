@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>✨ BuddyBot ✨ - Your Virtual AI Pet!</title>
+<link rel="stylesheet" href="style.css">
+<link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<div class="stars-bg"></div>
+
+<!-- MARQUEE HEADER -->
+<div class="marquee-banner">
+  <marquee behavior="scroll" direction="left" scrollamount="5">
+    🌟 WELCOME TO BUDDYBOT.COM 🌟 RAISE YOUR OWN AI-POWERED VIRTUAL PET 🌟 FEED IT, PLAY WITH IT, WATCH IT EVOLVE 🌟 THANKS FOR PLAYING 🌟
+  </marquee>
+</div>
+
+<div class="page-wrap">
+
+  <header class="site-header">
+    <h1 class="logo-title">💫 BuddyBot 💫</h1>
+    <p class="tagline">~ your very own AI companion ~</p>
+  </header>
+
+  <!-- NAME SETUP SCREEN -->
+  <div id="setup-screen" class="panel setup-panel">
+    <div class="panel-inner">
+      <h2>🥚 Adopt a New BuddyBot!</h2>
+      <p class="setup-text">What will you name your new best friend?</p>
+      <input type="text" id="pet-name-input" maxlength="16" placeholder="Type a name...">
+      <button id="start-btn" class="glossy-btn big-btn">✨ Hatch BuddyBot! ✨</button>
+    </div>
+  </div>
+
+  <!-- MAIN GAME SCREEN -->
+  <div id="game-screen" class="panel game-panel hidden">
+
+    <div class="game-top-row">
+
+      <!-- LEFT: STATS BOX -->
+      <div class="stats-box">
+        <h3 id="pet-name-display">BuddyBot</h3>
+        <div class="stage-badge" id="stage-badge">🌱 Egg</div>
+
+        <div class="stat-row">
+          <span class="stat-label">❤️ Trust</span>
+          <div class="bar-bg"><div class="bar-fill trust-fill" id="trust-bar"></div></div>
+          <span class="stat-num" id="trust-num">50</span>
+        </div>
+
+        <div class="stat-row">
+          <span class="stat-label">⭐ XP</span>
+          <div class="bar-bg"><div class="bar-fill xp-fill" id="xp-bar"></div></div>
+          <span class="stat-num" id="xp-num">0</span>
+        </div>
+
+        <div class="personality-box">
+          <span class="stat-label">🧠 Personality</span>
+          <p id="personality-display">curious and friendly</p>
+        </div>
+
+        <button id="reset-btn" class="glossy-btn small-btn reset-btn">🔄 Get a new pet!</button>
+      </div>
+
+      <!-- CENTER: PET STAGE -->
+      <div class="pet-stage">
+        <div class="pet-sparkles" id="pet-sparkles"></div>
+        <div class="speech-bubble" id="speech-bubble">
+          <p id="speech-text">Hi! I'm hatching... give me a name!</p>
+        </div>
+        <div class="pet-display" id="pet-display">
+          <span id="pet-emoji">🥚</span>
+        </div>
+        <div class="pet-shadow"></div>
+        <div class="loading-indicator hidden" id="loading-indicator">
+          <span>💭 BuddyBot is thinking</span><span class="dots"><span>.</span><span>.</span><span>.</span></span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ACTION BUTTONS -->
+    <div class="action-bar">
+      <button class="glossy-btn action-btn" id="feed-btn" data-action="feed">
+        <span class="btn-icon">🍎</span><span>Feed</span>
+      </button>
+      <button class="glossy-btn action-btn" id="play-btn" data-action="play">
+        <span class="btn-icon">🎮</span><span>Play</span>
+      </button>
+      <button class="glossy-btn action-btn" id="talk-btn" data-action="talk">
+        <span class="btn-icon">💬</span><span>Talk</span>
+      </button>
+      <button class="glossy-btn action-btn" id="sleep-btn" data-action="sleep">
+        <span class="btn-icon">😴</span><span>Sleep</span>
+      </button>
+    </div>
+
+    <!-- MEMORY LOG -->
+    <div class="memory-log-box">
+      <h4>📔 Memory Log</h4>
+      <ul id="memory-list"></ul>
+    </div>
+
+  </div>
+
+  <footer class="site-footer">
+    <p>made for GABA hackday &nbsp;|&nbsp; powered by Gemini AI</p>
+  </footer>
+
+</div>
+
+<!-- EVOLUTION CELEBRATION OVERLAY -->
+<div id="evolution-overlay" class="evolution-overlay hidden">
+  <div class="evolution-modal">
+    <div class="confetti" id="confetti-container"></div>
+    <h2>🎉 EVOLUTION! 🎉</h2>
+    <p id="evolution-pet-emoji" class="evolution-emoji">🐣</p>
+    <p id="evolution-text">Your BuddyBot has evolved!</p>
+    <button id="evolution-close-btn" class="glossy-btn big-btn">Yay!! ✨</button>
+  </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
