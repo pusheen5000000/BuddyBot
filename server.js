@@ -57,6 +57,72 @@ function safeParseJSON(text) {
     return null;
   }
 }
+async function generatePersonality(name, eggType) {
+  const prompt = `
+You are creating the personality of a virtual AI pet called BuddyBot.
+
+Pet name: ${name}
+Egg type: ${eggType}
+
+Create a unique cute personality.
+
+Return ONLY JSON:
+
+{
+  "personality": "short personality description",
+  "favoriteThing": "something they love",
+  "backstory": "one cute sentence"
+}
+
+Make it feel like a Tamagotchi/Neopets companion.
+`;
+
+  const response = await fetch(GEMINI_URL, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      contents: [
+        {
+          parts: [
+            { text: prompt }
+          ]
+        }
+      ],
+      generationConfig: {
+        temperature: 1,
+        maxOutputTokens: 200
+      }
+    })
+  });
+
+  const data = await response.json();
+
+  const text = data?.candidates?.[0]?.content?.parts?.[0]?.text || '';
+
+  return JSON.parse(
+    text.replace(/```json/g, '').replace(/```/g, '').trim()
+  );
+}
+app.post('/create-personality', async (req, res) => {
+  try {
+    const { name, eggType } = req.body;
+
+    const personality = await generatePersonality(name, eggType);
+
+    res.json(personality);
+
+  } catch (err) {
+    console.error(err);
+
+    res.json({
+      personality: "curious and friendly",
+      favoriteThing: "making friends",
+      backstory: "A tiny BuddyBot waiting for adventures!"
+    });
+  }
+});
 
 app.post('/chat', async (req, res) => {
   try {

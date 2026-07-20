@@ -136,6 +136,66 @@ body {
   box-shadow: 0 0 0 4px rgba(255,158,207,0.4);
 }
 
+/* EGG SELECTION SCREEN */
+.egg-select-panel h2 {
+  color: #ff3d81;
+  font-family: 'Source Code Pro', monospace;
+  font-size: 26px;
+  margin-top: 0;
+}
+
+.egg-grid {
+  display: flex;
+  gap: 14px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 18px;
+}
+
+.egg-card {
+  font-family: 'Source Code Pro', monospace;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  flex: 1 1 140px;
+  max-width: 160px;
+  background: #ffffff;
+  border: 3px solid #ffc2e0;
+  border-radius: 22px;
+  padding: 16px 10px 14px;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.12), inset 0 2px 3px rgba(255,255,255,0.8);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+  position: relative;
+}
+
+.egg-card:hover {
+  transform: translateY(-4px) scale(1.03);
+  box-shadow: 0 8px 16px rgba(0,0,0,0.18), inset 0 2px 3px rgba(255,255,255,0.8);
+}
+
+.egg-card:active {
+  transform: translateY(0) scale(0.98);
+}
+
+.egg-card.selected {
+  border-color: #ffd700;
+  box-shadow: 0 0 0 4px rgba(255,215,0,0.45), 0 8px 16px rgba(0,0,0,0.18);
+}
+
+.egg-emoji {
+  font-size: 56px;
+  line-height: 1;
+  filter: drop-shadow(0 4px 3px rgba(0,0,0,0.2));
+}
+
+.egg-img {
+  width: 64px;
+  height: 64px;
+  object-fit: contain;
+}
+
 /* GLOSSY BUTTONS */
 .glossy-btn {
   font-family: 'Source Code Pro', monospace;
@@ -621,4 +681,8 @@ body {
 @media (max-width: 480px) {
   .logo-title { font-size: 34px; }
   .pet-display { font-size: 70px; }
+}
+#back-to-egg-btn {
+  display: block;
+  margin: 18px auto 0;
 }

@@ -1,7 +1,25 @@
 const STORAGE_KEY = 'buddybot-pet-data';
 
-const EVOLUTION_EMOJIS = ['🥚', '🐣', '🐥', '🦄', '🐉'];
-const EVOLUTION_NAMES = ['Egg', 'Baby', 'Teen', 'Adult', 'Legendary'];
+const EGG_TYPES = {
+  egg1: {
+    emojis: ['🥚', '🐣', '🔥', '🐉', '🐲'],
+    names: ['Egg', 'Baby', 'Teen', 'Adult', 'Legendary']
+  },
+  egg2: {
+    emojis: ['🥚', '🐣', '🐟', '🐬', '🐳'],
+    names: ['Egg', 'Baby', 'Teen', 'Adult', 'Legendary']
+  },
+  egg3: {
+    emojis: ['🥚', '🐣', '🐛', '🦋', '🦄'],
+    names: ['Egg', 'Baby', 'Teen', 'Adult', 'Legendary']
+  }
+};
+
+const DEFAULT_EGG_TYPE = 'egg1';
+
+function getEvolutionSet(petObj) {
+  return EGG_TYPES[petObj.eggType] || EGG_TYPES[DEFAULT_EGG_TYPE];
+}
 
 const SOUND_PLACEHOLDERS = {
   feed: '🔊 *nom nom nom*',
@@ -12,15 +30,20 @@ const SOUND_PLACEHOLDERS = {
   evolve: '🔊 *TA-DA sparkle jingle*'
 };
 
-let pet = null; // current pet, loaded from localStorage or created fresh
-let sleepTimer = null; // interval id for the sleep countdown, so we can clear it
+let pet = null;
+let sleepTimer = null;
 
-// grabbing all the elements we need up front
+const eggSelectScreen = document.getElementById('egg-select-screen');
 const setupScreen = document.getElementById('setup-screen');
 const gameScreen = document.getElementById('game-screen');
 const petNameInput = document.getElementById('pet-name-input');
 const startBtn = document.getElementById('start-btn');
+const backToEggBtn = document.getElementById('back-to-egg-btn');
 const resetBtn = document.getElementById('reset-btn');
+const eggCards = document.querySelectorAll('.egg-card');
+const setupEggEmojiHeading = document.getElementById('setup-egg-emoji-heading');
+
+let selectedEggType = null;
 
 const petNameDisplay = document.getElementById('pet-name-display');
 const stageBadge = document.getElementById('stage-badge');
@@ -62,16 +85,36 @@ function savePet() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(pet));
 }
 
-function createNewPet(name) {
+async function createNewPet(name, eggType) {
+
+  const response = await fetch('/create-personality', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      name,
+      eggType
+    })
+  });
+
+  const personalityData = await response.json();
+
   pet = {
     name: name,
-    personality: 'curious and friendly',
+    eggType: eggType || DEFAULT_EGG_TYPE,
+
+    personality: personalityData.personality,
+    favoriteThing: personalityData.favoriteThing,
+    backstory: personalityData.backstory,
+
     memories: [],
     trust: 50,
     xp: 0,
     evolutionStage: 0,
     sleepUntil: null
   };
+
   savePet();
 }
 
@@ -83,21 +126,34 @@ function init() {
       enterSleep(pet.sleepUntil - Date.now());
     }
   } else {
-    setupScreen.classList.remove('hidden');
-    gameScreen.classList.add('hidden');
+    showEggSelectScreen();
   }
 }
 
+function showEggSelectScreen() {
+  eggSelectScreen.classList.remove('hidden');
+  setupScreen.classList.add('hidden');
+  gameScreen.classList.add('hidden');
+}
+
+function showSetupScreen() {
+  eggSelectScreen.classList.add('hidden');
+  setupScreen.classList.remove('hidden');
+  gameScreen.classList.add('hidden');
+}
+
 function showGameScreen() {
+  eggSelectScreen.classList.add('hidden');
   setupScreen.classList.add('hidden');
   gameScreen.classList.remove('hidden');
 }
 
 function renderPet() {
   petNameDisplay.textContent = pet.name;
-  const stage = Math.min(pet.evolutionStage, EVOLUTION_EMOJIS.length - 1);
-  petEmoji.textContent = EVOLUTION_EMOJIS[stage];
-  stageBadge.textContent = `🌱 ${EVOLUTION_NAMES[stage]}`;
+  const evoSet = getEvolutionSet(pet);
+  const stage = Math.min(pet.evolutionStage, evoSet.emojis.length - 1);
+  petEmoji.textContent = evoSet.emojis[stage];
+  stageBadge.textContent = `🌱 ${evoSet.names[stage]}`;
 
   const trustPct = Math.max(0, Math.min(100, pet.trust));
   const xpPct = Math.max(0, Math.min(100, pet.xp % 100));
@@ -136,7 +192,6 @@ function setSpeech(text) {
 }
 
 function playSound(key) {
-  // Placeholder for sound effects - swap with real Audio() calls once files are added
   console.log(SOUND_PLACEHOLDERS[key] || '🔊 *sound*');
 }
 
@@ -163,7 +218,6 @@ function setButtonsDisabled(disabled) {
   actionButtons.forEach(btn => btn.disabled = disabled);
 }
 
-// puts the pet to bed for `durationMs` - buttons stay locked until it wakes up
 function enterSleep(durationMs) {
   setButtonsDisabled(true);
   petDisplay.classList.add('asleep');
@@ -180,7 +234,7 @@ function enterSleep(durationMs) {
 
   updateCountdown();
   clearInterval(sleepTimer);
-  sleepTimer = setInterval(updateCountdown, 15000); // refresh the countdown text periodically
+  sleepTimer = setInterval(updateCountdown, 15000);
 }
 
 function wakeUp() {
@@ -194,12 +248,12 @@ function wakeUp() {
   setSpeech(`${pet.name} wakes up, stretching! 🌤️`);
 }
 
-// confetti + modal when the pet levels up a stage
 function celebrateEvolution() {
   playSound('evolve');
-  const stage = Math.min(pet.evolutionStage, EVOLUTION_EMOJIS.length - 1);
-  evolutionPetEmoji.textContent = EVOLUTION_EMOJIS[stage];
-  evolutionText.textContent = `${pet.name} evolved into a ${EVOLUTION_NAMES[stage]}!`;
+  const evoSet = getEvolutionSet(pet);
+  const stage = Math.min(pet.evolutionStage, evoSet.emojis.length - 1);
+  evolutionPetEmoji.textContent = evoSet.emojis[stage];
+  evolutionText.textContent = `${pet.name} evolved into a ${evoSet.names[stage]}!`;
   evolutionOverlay.classList.remove('hidden');
 
   confettiContainer.innerHTML = '';
@@ -272,7 +326,8 @@ function applyResponse(data, action) {
   }
 
   let didEvolve = false;
-  if (data.evolution === true && pet.evolutionStage < EVOLUTION_EMOJIS.length - 1) {
+  const evoSet = getEvolutionSet(pet);
+  if (data.evolution === true && pet.evolutionStage < evoSet.emojis.length - 1) {
     pet.evolutionStage += 1;
     didEvolve = true;
   }
@@ -296,15 +351,39 @@ function applyResponse(data, action) {
   }
 }
 
-startBtn.addEventListener('click', () => {
+eggCards.forEach(card => {
+  card.addEventListener('click', () => {
+    selectedEggType = card.getAttribute('data-egg');
+
+    eggCards.forEach(c => c.classList.remove('selected'));
+    card.classList.add('selected');
+
+    setupEggEmojiHeading.textContent = `🥚 Adopt Your BuddyBot!`;
+
+    showSetupScreen();
+    petNameInput.value = '';
+    petNameInput.focus();
+  });
+});
+
+backToEggBtn.addEventListener('click', () => {
+  showEggSelectScreen();
+});
+
+startBtn.addEventListener('click', async () => {
   const name = petNameInput.value.trim();
   if (!name) {
     petNameInput.style.borderColor = '#ff3d81';
     petNameInput.placeholder = 'Please enter a name!';
     return;
   }
-  createNewPet(name);
-  showGameScreen();
+startBtn.textContent = "✨ Creating your BuddyBot...";
+
+await createNewPet(name, selectedEggType);
+
+showGameScreen();
+
+startBtn.textContent = "✨ Hatch BuddyBot! ✨";
   renderPet();
   setSpeech(`Hi, I'm ${name}! Nice to meet you! 🎉`);
 });

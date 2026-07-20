@@ -25,13 +25,33 @@
     <p class="tagline">~ your very own AI companion ~</p>
   </header>
 
-  <!-- NAME SETUP SCREEN -->
-  <div id="setup-screen" class="panel setup-panel">
+  <!-- EGG SELECTION SCREEN -->
+  <div id="egg-select-screen" class="panel egg-select-panel">
     <div class="panel-inner">
-      <h2>🥚 Adopt a New BuddyBot!</h2>
+      <h2>🥚 Choose Your Egg!</h2>
+      <p class="setup-text">Which BuddyBot egg will you adopt?</p>
+      <div class="egg-grid">
+        <button class="egg-card" data-egg="egg1">
+          <span class="egg-emoji">🥚</span>
+        </button>
+        <button class="egg-card" data-egg="egg2">
+          <span class="egg-emoji">🥚</span>
+        </button>
+        <button class="egg-card" data-egg="egg3">
+          <span class="egg-emoji">🥚</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- NAME SETUP SCREEN -->
+  <div id="setup-screen" class="panel setup-panel hidden">
+    <div class="panel-inner">
+      <h2 id="setup-egg-emoji-heading">🥚 Adopt a New BuddyBot!</h2>
       <p class="setup-text">What will you name your new best friend?</p>
       <input type="text" id="pet-name-input" maxlength="16" placeholder="Type a name...">
       <button id="start-btn" class="glossy-btn big-btn">✨ Hatch BuddyBot! ✨</button>
+      <button id="back-to-egg-btn" class="glossy-btn small-btn reset-btn">⬅️ Pick a different egg</button>
     </div>
   </div>
 
